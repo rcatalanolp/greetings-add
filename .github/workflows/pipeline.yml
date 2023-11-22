@@ -96,5 +96,18 @@ jobs:
        chmod +x ./test-script.sh
        ./test-script.sh ${{ needs.build.outputs.artifact-path }} ${{ github.event.inputs.myValues }}
 
-
-   
+  # lab 6
+  # run a custom workflow from another repo
+  # first run will throw an error becauses uses is set to an invalid github username
+  count-args:
+   runs-on: ubuntu-latest
+  
+   steps:
+     - id: report-count
+       uses: rcatalanolp/arg-count-action@main
+       with:
+         arguments-to-count: ${{ github.event.inputs.myValues }}
+     - run: echo
+     - shell: bash
+       run: |
+           echo argument count is ${{ steps.report-count.outputs.arg-count }} 
