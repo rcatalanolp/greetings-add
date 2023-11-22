@@ -25,9 +25,15 @@ permissions:
   contents: read
 
 jobs:
+  # build is the first job
   build:
-
     runs-on: ubuntu-latest
+
+    # Map a step output to a job output (jarpath at line 66)
+    # steps (setoutput is the id for the output step, jarpath is the new env variable name)
+    # artifact-path is the variable value that is used to reference the value from the second job
+    outputs:
+      artifact-path: ${{ steps.setoutput.outputs.jarpath }}
 
     steps:
     - uses: actions/checkout@v3
@@ -54,3 +60,20 @@ jobs:
       with:
         name: greetings-jar
         path: build/libs
+
+    # output value for this job - notice id value
+    # this set the job up to return the artifact name
+    - name: Set output
+      id: setoutput
+      run: echo jarpath=build/libs/greetings-add-${{ github.event.inputs.myVersion}}${{ env.TDS }}.jar >> $GITHUB_OUTPUT
+
+  # print-build-output is the 2nd job
+  # needs parameter references the first job name
+  print-build-output:
+   runs-on: ubuntu-latest
+   needs: build
+   steps:
+   - run: echo ${{needs.build.outputs.artifact-path}}
+
+
+   
