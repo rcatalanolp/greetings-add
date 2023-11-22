@@ -113,8 +113,9 @@ jobs:
      - shell: bash
        run: |
            echo argument count is ${{ steps.report-count.outputs.arg-count }} 
+           
            # force failure to throw create issue on failure in lab 10
-           exit 1
+           #exit 1
            
   # lab 10
   create-issue-on-failure:
